@@ -27,7 +27,7 @@ def main():
     """
     data = ''
     bytes_needed = phone.SAMPLE_WIDTH * phone.NUM_CHANNELS * frame_count
-    while len(data) < bytes_needed:
+    while bytes_needed > 0:
       new_data = connection.recv(bytes_needed)
       data += new_data
       bytes_needed -= len(new_data)
