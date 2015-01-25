@@ -1,10 +1,14 @@
 """Server that receives and plays audio."""
+import os
 import pyaudio
 import socket
 import sys
 import time
 
 import phone
+
+# Deals with pulse audio issues on some machines
+os.environ['PULSE_LATENCY_MSEC'] = '1'
 
 def InitSocket():
   sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
