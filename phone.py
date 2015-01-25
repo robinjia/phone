@@ -3,6 +3,7 @@ import pyaudio
 
 # Network Constants
 PORT = 3000
+READY_MESSAGE = 'ready'
 
 # Audio Constants
 SAMPLE_WIDTH = 2  # bytes per channel

@@ -49,7 +49,8 @@ def main():
   try:
     print >> sys.stderr, 'Starting stream.'
     stream.start_stream()
-    print >> sys.stderr, 'Stream started.'
+    print >> sys.stderr, 'Ready to begin receiving audio.'
+    connection.sendall(phone.READY_MESSAGE)
     # Wait for stream to finish
     while stream.is_active():
       time.sleep(0.1)

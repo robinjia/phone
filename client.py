@@ -29,6 +29,17 @@ def InitSocket(server_name):
   return sock
 
 
+def WaitForAck(sock):
+  print >>sys.stderr, 'Waiting for ack from server.'
+  data = ''
+  while True:
+    new_data = sock.recv(4)
+    data += new_data
+    if data == phone.READY_MESSAGE:
+      break
+  print >>sys.stderr, 'Received ack from server.'
+
+
 def main():
   sock = InitSocket(sys.argv[1])
   from_file = len(sys.argv) > 2
@@ -37,6 +48,7 @@ def main():
   else:
     stream = InitMicrophone()
   try:
+    WaitForAck(sock)
     while True:
       if from_file:
         data = wf.readframes(1)
