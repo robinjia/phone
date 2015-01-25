@@ -42,9 +42,8 @@ def main():
   # Initialize audio stream
   p = pyaudio.PyAudio()
   stream = p.open(format=p.get_format_from_width(phone.SAMPLE_WIDTH),
-                  channels=phone.NUM_CHANNELS,
-                  rate=phone.FRAME_RATE,
-                  output=True,
+                  channels=phone.NUM_CHANNELS, rate=phone.FRAME_RATE,
+                  output=True, frames_per_buffer=phone.OUTPUT_FRAMES_PER_BUFFER,
                   stream_callback=get_data)
 
   try:
