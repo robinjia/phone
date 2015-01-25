@@ -1,4 +1,6 @@
 """Defines shared constants."""
+import pyaudio
+
 # Network Constants
 PORT = 3000
 
@@ -6,3 +8,5 @@ PORT = 3000
 SAMPLE_WIDTH = 2  # bytes per channel
 NUM_CHANNELS = 2  # number of channels
 FRAME_RATE = 44100  # frame rate in Hz
+INPUT_FORMAT = pyaudio.paInt16  # Format for microphone (2-bytes)
+INPUT_FRAMES_PER_BUFFER = 1024
