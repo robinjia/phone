@@ -28,8 +28,10 @@ def main():
     data = ''
     bytes_needed = phone.SAMPLE_WIDTH * phone.NUM_CHANNELS * frame_count
     while len(data) < bytes_needed:
-      new_data = connection.recv(min(4096, bytes_needed))
+      new_data = connection.recv(bytes_needed)
       data += new_data
+      bytes_needed -= len(new_data)
+    connection.sendall(phone.ACK_MESSAGE)
     return (data, pyaudio.paContinue)
 
   # Initialize socket

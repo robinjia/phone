@@ -2,6 +2,7 @@
 import pyaudio
 import socket
 import sys
+import time
 import wave
 
 import phone
@@ -29,13 +30,13 @@ def InitSocket(server_name):
   return sock
 
 
-def WaitForAck(sock):
+def WaitForAck(sock, message):
   print >>sys.stderr, 'Waiting for ack from server.'
   data = ''
   while True:
-    new_data = sock.recv(4)
+    new_data = sock.recv(8)
     data += new_data
-    if data == phone.READY_MESSAGE:
+    if data == message:
       break
   print >>sys.stderr, 'Received ack from server.'
 
@@ -48,15 +49,19 @@ def main():
   else:
     stream = InitMicrophone()
   try:
-    WaitForAck(sock)
+    WaitForAck(sock, phone.READY_MESSAGE)
     while True:
       if from_file:
-        data = wf.readframes(1)
+        data = wf.readframes(phone.INPUT_FRAMES_PER_BUFFER)
       else:
         data = stream.read(phone.INPUT_FRAMES_PER_BUFFER)
       if not data:
         break
+      start = time.clock()
       sock.sendall(data)
+      WaitForAck(sock, phone.ACK_MESSAGE)
+      end = time.clock()
+      print 'Round trip took %g seconds ' % (end - start)
   finally:
     sock.close()
 
