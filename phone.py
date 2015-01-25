@@ -1,6 +1,5 @@
 """Defines shared constants."""
 # Network Constants
-SERVER_NAME = 'localhost'
 PORT = 3000
 
 # Audio Constants
