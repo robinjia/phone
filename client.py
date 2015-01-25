@@ -57,11 +57,11 @@ def main():
         data = stream.read(phone.INPUT_FRAMES_PER_BUFFER)
       if not data:
         break
-      start = time.clock()
+      #start = time.clock()
       sock.sendall(data)
-      WaitForAck(sock, phone.ACK_MESSAGE)
-      end = time.clock()
-      print 'Round trip took %g seconds ' % (end - start)
+      #WaitForAck(sock, phone.ACK_MESSAGE)
+      #end = time.clock()
+      #print 'Round trip took %g seconds ' % (end - start)
   finally:
     sock.close()
 
