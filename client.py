@@ -61,7 +61,7 @@ def main():
         print 'Received data of length %d' % len(data)
       if not data:
         break
-      # sock.sendall(data)
+      sock.sendall(data)
       cur_time = time.time()
       if num_packets_sent == 0:
         start_time = cur_time
@@ -76,11 +76,9 @@ def main():
       num_packets_sent += 1
   finally:
     sock.close()
-
-  if not from_file:
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
+    if not from_file:
+      stream.stop_stream()
+      stream.close()
 
 
 if __name__ == '__main__':
