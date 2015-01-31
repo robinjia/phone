@@ -17,7 +17,7 @@ def ReadWav(filename):
 def InitMicrophone():
   p = pyaudio.PyAudio()
   stream = p.open(format=phone.INPUT_FORMAT, channels=phone.NUM_CHANNELS,
-                  rate=phone.FRAME_RATE, input=True, output=True,
+                  rate=phone.FRAME_RATE, input=True,
                   frames_per_buffer=phone.INPUT_FRAMES_PER_BUFFER)
   return stream
 
@@ -44,24 +44,36 @@ def WaitForAck(sock, message):
 def main():
   sock = InitSocket(sys.argv[1])
   from_file = len(sys.argv) > 2
+  num_packets_sent = 0
   if from_file:
     wf = ReadWav(sys.argv[2])
   else:
     stream = InitMicrophone()
   try:
     WaitForAck(sock, phone.READY_MESSAGE)
+    start_time = time.time()
+    prev_time = time.time()
     while True:
       if from_file:
         data = wf.readframes(phone.INPUT_FRAMES_PER_BUFFER)
       else:
         data = stream.read(phone.INPUT_FRAMES_PER_BUFFER)
+        print 'Received data of length %d' % len(data)
       if not data:
         break
-      #start = time.clock()
-      sock.sendall(data)
-      #WaitForAck(sock, phone.ACK_MESSAGE)
-      #end = time.clock()
-      #print 'Round trip took %g seconds ' % (end - start)
+      # sock.sendall(data)
+      cur_time = time.time()
+      if num_packets_sent == 0:
+        start_time = cur_time
+      else:
+        print 'Iteration took %g ms (ideal = %g)' % (
+            1000 * (cur_time - prev_time),
+            1000.0 * phone.INPUT_FRAMES_PER_BUFFER / phone.FRAME_RATE)
+        print 'Sent %d packets in %g ms (%g ms per packet)' % (
+            num_packets_sent, 1000 * (cur_time - start_time),
+            1000 * (cur_time - start_time) / num_packets_sent)
+      prev_time = cur_time
+      num_packets_sent += 1
   finally:
     sock.close()
 
